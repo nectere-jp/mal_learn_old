@@ -40,8 +40,16 @@ class _LoginScreenState extends State<LoginScreen> {
         const Space(height: 16),
         PasswordField(controller: _passwordController),
         const Space(height: 16),
-        FullWideButton(onPressed: () => {}, text: 'ログイン'),
+        FullWideButton(onPressed: () => _onSingIn(), text: 'ログイン'),
       ],
     );
+  }
+
+  Future<void> _onSingIn() async {
+    if (_formKey.currentState?.validate() != true) {
+      return;
+    }
+
+    print('sing in!');
   }
 }

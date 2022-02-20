@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mal_learn/screens/login_screen.dart';
+import 'package:mal_learn/screens/sign_up_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Mal Learn",
       theme: ThemeData(primarySwatch: Colors.pink),
-      home: const LoginScreen(),
+      home: const SignupScreen(),
     );
   }
 }

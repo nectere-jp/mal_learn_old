@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mal_learn/screens/chat_list_screen.dart';
 import 'package:mal_learn/widgets/space.dart';
-import 'package:mal_learn/widgets/text_fields.dart';
+import 'package:mal_learn/widgets/input_fields.dart';
 import 'package:mal_learn/widgets/full_wide_button.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -14,6 +14,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -38,6 +39,10 @@ class _SignUpScreenState extends State<SignupScreen> {
       children: [
         Text('新規登録', style: Theme.of(context).textTheme.headline4),
         const Space(height: 16),
+        const IconPicker(),
+        const Space(height: 16),
+        NameField(controller: _nameController),
+        const Space(height: 16),
         EmailField(controller: _emailController),
         const Space(height: 16),
         PasswordField(controller: _passwordController),
@@ -61,7 +66,7 @@ class _SignUpScreenState extends State<SignupScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => ChatListScreen(),
+          builder: (_) => const ChatListScreen(),
         ),
       );
     } catch (e) {

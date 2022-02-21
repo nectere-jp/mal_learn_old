@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mal_learn/screens/chat_list_screen.dart';
 import 'package:mal_learn/widgets/space.dart';
-import 'package:mal_learn/widgets/text_fields.dart';
+import 'package:mal_learn/widgets/input_fields.dart';
 import 'package:mal_learn/widgets/full_wide_button.dart';
 
 class SignInScreen extends StatefulWidget {

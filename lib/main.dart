@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mal_learn/screens/sign_up_screen.dart';
 
 void main() async {
@@ -7,7 +8,7 @@ void main() async {
   await Firebase.initializeApp();
 
   runApp(
-    const App(),
+    const ProviderScope(child: App()),
   );
 }
 

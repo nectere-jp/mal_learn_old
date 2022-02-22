@@ -15,12 +15,12 @@ class NameField extends StatelessWidget {
       controller: controller,
       decoration: const InputDecoration(labelText: 'ニックネーム'),
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: emailValidator,
+      validator: nameValidator,
     );
   }
 
-  String? emailValidator(String? value) {
-    if (value == null) {
+  String? nameValidator(String? value) {
+    if (value == null || value.isEmpty) {
       return 'ニックネームを入力してください';
     } else if (value.length > 30) {
       return 'ニックネームは30文字以下で設定してください';

@@ -2,7 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mal_learn/screens/chat_list_screen.dart';
 import 'package:mal_learn/widgets/space.dart';
-import 'package:mal_learn/widgets/input_fields.dart';
+import 'package:mal_learn/widgets/form_items/birthday_field.dart';
+import 'package:mal_learn/widgets/form_items/email_field.dart';
+import 'package:mal_learn/widgets/form_items/icon_picker.dart';
+import 'package:mal_learn/widgets/form_items/name_field.dart';
+import 'package:mal_learn/widgets/form_items/password_field.dart';
 import 'package:mal_learn/widgets/full_wide_button.dart';
 
 class SignupScreen extends StatefulWidget {

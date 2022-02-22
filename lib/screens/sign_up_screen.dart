@@ -39,13 +39,15 @@ class _SignUpScreenState extends State<SignupScreen> {
       children: [
         Text('新規登録', style: Theme.of(context).textTheme.headline4),
         const Space(height: 16),
-        const IconPicker(),
+        const IconPicker(), //TODO: コントローラーを使って制御
         const Space(height: 16),
         NameField(controller: _nameController),
         const Space(height: 16),
         EmailField(controller: _emailController),
         const Space(height: 16),
         PasswordField(controller: _passwordController),
+        const Space(height: 16),
+        const BirthDayField(),
         const Space(height: 16),
         FullWideButton(onPressed: () => _onSignUp(), text: 'ログイン'),
       ],

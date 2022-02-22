@@ -75,7 +75,7 @@ class PasswordField extends StatelessWidget {
   String? passwordValidator(String? value) {
     // TODO: flutter_pw_validatorを使用
 
-    if (value == null) {
+    if (value == null || value.isEmpty) {
       return 'パスワードを入力してください';
     } else if (value.length < 6) {
       return '6文字以上入力してください。';
@@ -141,4 +141,78 @@ class IconPickerState extends ConsumerState<IconPicker> {
     ref.read(selectedIconPathProvider.notifier).state =
         result.files.single.path!;
   }
+}
+
+class BirthDayField extends StatefulWidget {
+  const BirthDayField({Key? key}) : super(key: key);
+
+  @override
+  createState() => BirthDayFieldState();
+}
+
+class BirthDayFieldState extends State<BirthDayField> {
+  final _controller = TextEditingController();
+
+  @override
+  initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DateField(
+      builder: myBuilder,
+      validator: birthDayValidator,
+    );
+  }
+
+  Widget myBuilder(FormFieldState<DateTime> state) {
+    return TextField(
+      controller: _controller,
+      readOnly: true,
+      onTap: () => _selectDate(),
+      decoration: const InputDecoration(labelText: '生年月日'),
+    );
+  }
+
+  String? birthDayValidator(DateTime? birthDay) {
+    if (birthDay == null) {
+      return '誕生日を入力してください';
+    }
+    return null;
+  }
+
+  void _selectDate() async {
+    final DateTime? birthDay = await showDatePicker(
+      context: context,
+      initialDatePickerMode: DatePickerMode.year,
+      initialDate: DateTime(DateTime.now().year - 16),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (birthDay != null) {
+      _controller.value = _controller.value.copyWith(
+        text: '${birthDay.year}年${birthDay.month}月${birthDay.day}日',
+      );
+    }
+
+    final FocusScopeNode currentScope = FocusScope.of(context);
+    if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
+}
+
+@immutable
+class DateField extends FormField<DateTime> {
+  const DateField({
+    Key? key,
+    FormFieldValidator<DateTime>? validator,
+    required Widget Function(FormFieldState<DateTime>) builder,
+  }) : super(
+          key: key,
+          validator: validator,
+          builder: builder,
+        );
 }

@@ -61,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => ChatListScreen(),
+          builder: (_) => const ChatListScreen(),
         ),
       );
     } catch (e) {

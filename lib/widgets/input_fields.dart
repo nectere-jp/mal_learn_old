@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:mal_learn/provider.dart';
 
 class NameField extends StatelessWidget {
   const NameField({required this.controller, Key? key}) : super(key: key);

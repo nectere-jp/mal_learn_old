@@ -93,17 +93,34 @@ class IconPicker extends ConsumerStatefulWidget {
 }
 
 class IconPickerState extends ConsumerState<IconPicker> {
+  String? _errorText;
+  String? _imagePath;
+
   @override
   Widget build(BuildContext context) {
-    final String? imagePath = ref.watch(selectedIconPathProvider);
-    return imagePath != null
-        ? buttonWithSelectedImage(imagePath)
-        : defaultButton();
+    return PictureField(
+      builder: myBuilder,
+      validator: _iconPickerValidator,
+    );
   }
 
-  Widget defaultButton() {
+  Widget myBuilder(FormFieldState<String> state) {
+    return Column(
+      children: [
+        _imagePath != null
+            ? _buttonWithSelectedImage(_imagePath!, state)
+            : _defaultButton(state),
+        Text(
+          _errorText ?? '',
+          style: TextStyle(color: Theme.of(context).errorColor),
+        ),
+      ],
+    );
+  }
+
+  Widget _defaultButton(FormFieldState<String> state) {
     return MaterialButton(
-      onPressed: () => _onSelectImage(),
+      onPressed: () => _selectImage(state),
       child: const Icon(Icons.person, size: 60),
       height: 100,
       color: Colors.blueGrey,
@@ -112,9 +129,10 @@ class IconPickerState extends ConsumerState<IconPicker> {
     );
   }
 
-  MaterialButton buttonWithSelectedImage(String imagePath) {
+  MaterialButton _buttonWithSelectedImage(
+      String imagePath, FormFieldState<String> state) {
     return MaterialButton(
-      onPressed: () => _onSelectImage(),
+      onPressed: () => _selectImage(state),
       child: Container(
         width: 100,
         height: 100,
@@ -130,17 +148,46 @@ class IconPickerState extends ConsumerState<IconPicker> {
     );
   }
 
-  void _onSelectImage() async {
+  String? _iconPickerValidator(String? value) {
+    if (value == null) {
+      String message = 'アイコン画像を選択してください';
+      setState(() {
+        _errorText = message;
+      });
+      return message;
+    } else {
+      setState(() {
+        _errorText = null;
+      });
+      return null;
+    }
+  }
+
+  void _selectImage(FormFieldState<String> state) async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
 
-    if (result == null) {
-      return;
-    }
+    if (result != null) {
+      String path = result.files.single.path!;
 
-    ref.read(selectedIconPathProvider.notifier).state =
-        result.files.single.path!;
+      state.didChange(path);
+      setState(() {
+        _imagePath = path;
+      });
+    }
   }
+}
+
+class PictureField extends FormField<String> {
+  const PictureField({
+    Key? key,
+    FormFieldValidator<String>? validator,
+    required Widget Function(FormFieldState<String>) builder,
+  }) : super(
+          key: key,
+          validator: validator,
+          builder: builder,
+        );
 }
 
 class BirthDayField extends StatefulWidget {
@@ -155,11 +202,6 @@ class BirthDayFieldState extends State<BirthDayField> {
   String? _errorText;
 
   @override
-  initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return DateField(
       builder: myBuilder,
@@ -171,7 +213,7 @@ class BirthDayFieldState extends State<BirthDayField> {
     return TextField(
       controller: _controller,
       readOnly: true,
-      onTap: () => _selectDate(),
+      onTap: () => _selectDate(state),
       decoration: InputDecoration(labelText: '生年月日', errorText: _errorText),
     );
   }
@@ -184,10 +226,13 @@ class BirthDayFieldState extends State<BirthDayField> {
       });
       return _message;
     }
+    setState(() {
+      _errorText = null;
+    });
     return null;
   }
 
-  void _selectDate() async {
+  void _selectDate(FormFieldState<DateTime> state) async {
     final DateTime? birthDay = await showDatePicker(
       context: context,
       initialDatePickerMode: DatePickerMode.year,
@@ -197,6 +242,7 @@ class BirthDayFieldState extends State<BirthDayField> {
     );
 
     if (birthDay != null) {
+      state.didChange(birthDay);
       _controller.value = _controller.value.copyWith(
         text: '${birthDay.year}年${birthDay.month}月${birthDay.day}日',
       );

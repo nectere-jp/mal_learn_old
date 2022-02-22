@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignupScreen> {
       children: [
         Text('新規登録', style: Theme.of(context).textTheme.headline4),
         const Space(height: 16),
-        const IconPicker(), //TODO: コントローラーを使って制御
+        const IconPicker(),
         const Space(height: 16),
         NameField(controller: _nameController),
         const Space(height: 16),

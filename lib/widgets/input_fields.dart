@@ -152,6 +152,7 @@ class BirthDayField extends StatefulWidget {
 
 class BirthDayFieldState extends State<BirthDayField> {
   final _controller = TextEditingController();
+  String? _errorText;
 
   @override
   initState() {
@@ -171,13 +172,17 @@ class BirthDayFieldState extends State<BirthDayField> {
       controller: _controller,
       readOnly: true,
       onTap: () => _selectDate(),
-      decoration: const InputDecoration(labelText: '生年月日'),
+      decoration: InputDecoration(labelText: '生年月日', errorText: _errorText),
     );
   }
 
-  String? birthDayValidator(DateTime? birthDay) {
-    if (birthDay == null) {
-      return '誕生日を入力してください';
+  String? birthDayValidator(DateTime? value) {
+    if (value == null) {
+      String _message = '誕生日を入力してください';
+      setState(() {
+        _errorText = _message;
+      });
+      return _message;
     }
     return null;
   }

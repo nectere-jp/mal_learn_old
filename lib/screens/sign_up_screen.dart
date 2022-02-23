@@ -70,6 +70,8 @@ class _SignUpScreenState extends State<SignupScreen> {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
+      
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => const ChatListScreen(),

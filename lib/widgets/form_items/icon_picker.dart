@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 
-final newIconPathProvider = StateProvider((ref) => '');
+final newIconPathProvider = StateProvider<String?>((ref) => null);
 
 class IconPicker extends ConsumerStatefulWidget {
   const IconPicker({Key? key}) : super(key: key);
@@ -23,10 +23,10 @@ class IconPickerState extends ConsumerState<IconPicker> {
   }
 
   Widget myBuilder(FormFieldState<String> state) {
-    String _imagePath = ref.watch(newIconPathProvider);
+    String? _imagePath = ref.watch(newIconPathProvider);
     return Column(
       children: [
-        _imagePath != ''
+        _imagePath != null
             ? _buttonWithSelectedImage(_imagePath, state)
             : _defaultButton(state),
         Text(
@@ -73,6 +73,7 @@ class IconPickerState extends ConsumerState<IconPicker> {
       message = 'アイコン画像を選択してください';
     }
 
+    print('hello');
     setState(() {
       _errorText = message;
     });

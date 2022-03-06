@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 import 'package:mal_learn/screens/chat_list_screen.dart';
 import 'package:mal_learn/widgets/space.dart';
 import 'package:mal_learn/widgets/form_items/birthday_field.dart';
@@ -8,15 +9,16 @@ import 'package:mal_learn/widgets/form_items/icon_picker.dart';
 import 'package:mal_learn/widgets/form_items/name_field.dart';
 import 'package:mal_learn/widgets/form_items/password_field.dart';
 import 'package:mal_learn/widgets/full_wide_button.dart';
+import 'package:mal_learn/repositories/auth_repository.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignupScreen> {
+class _SignUpScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -64,13 +66,20 @@ class _SignUpScreenState extends State<SignupScreen> {
         return;
       }
 
+      final String nickname = _nameController.text;
       final String email = _emailController.text;
       final String password = _passwordController.text;
+      final String iconPath = ref.read(newIconPathProvider)!;
+      final File icon = File(iconPath);
+      final DateTime birthday = ref.read(selectedBirthDayProvider)!;
 
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      
+      await userRepository.addUser(
+        nickname: nickname,
+        email: email,
+        password: password,
+        icon: icon,
+        birthday: birthday,
+      );
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -78,6 +87,7 @@ class _SignUpScreenState extends State<SignupScreen> {
         ),
       );
     } catch (e) {
+      //TODO: 中途半端なアカウントを消す
       await showDialog(
         context: context,
         builder: (context) {

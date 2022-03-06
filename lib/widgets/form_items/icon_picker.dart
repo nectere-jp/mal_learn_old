@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 
-class IconPicker extends StatefulWidget {
+final newIconPathProvider = StateProvider((ref) => '');
+
+class IconPicker extends ConsumerStatefulWidget {
   const IconPicker({Key? key}) : super(key: key);
 
   @override
   createState() => IconPickerState();
 }
 
-class IconPickerState extends State<IconPicker> {
+class IconPickerState extends ConsumerState<IconPicker> {
   String? _errorText;
-  String? _imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +23,11 @@ class IconPickerState extends State<IconPicker> {
   }
 
   Widget myBuilder(FormFieldState<String> state) {
+    String _imagePath = ref.watch(newIconPathProvider);
     return Column(
       children: [
-        _imagePath != null
-            ? _buttonWithSelectedImage(_imagePath!, state)
+        _imagePath != ''
+            ? _buttonWithSelectedImage(_imagePath, state)
             : _defaultButton(state),
         Text(
           _errorText ?? '',
@@ -65,18 +68,15 @@ class IconPickerState extends State<IconPicker> {
   }
 
   String? _iconPickerValidator(String? value) {
+    String? message;
     if (value == null) {
-      String message = 'アイコン画像を選択してください';
-      setState(() {
-        _errorText = message;
-      });
-      return message;
-    } else {
-      setState(() {
-        _errorText = null;
-      });
-      return null;
+      message = 'アイコン画像を選択してください';
     }
+
+    setState(() {
+      _errorText = message;
+    });
+    return message;
   }
 
   void _selectImage(FormFieldState<String> state) async {
@@ -87,9 +87,7 @@ class IconPickerState extends State<IconPicker> {
       String path = result.files.single.path!;
 
       state.didChange(path);
-      setState(() {
-        _imagePath = path;
-      });
+      ref.read(newIconPathProvider.notifier).state = path;
     }
   }
 }

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BirthDayField extends StatefulWidget {
+final selectedBirthDayProvider = StateProvider<DateTime?>((ref) => null);
+
+class BirthDayField extends ConsumerStatefulWidget {
   const BirthDayField({Key? key}) : super(key: key);
 
   @override
   createState() => BirthDayFieldState();
 }
 
-class BirthDayFieldState extends State<BirthDayField> {
+class BirthDayFieldState extends ConsumerState<BirthDayField> {
   final _controller = TextEditingController();
   String? _errorText;
 
@@ -29,17 +32,15 @@ class BirthDayFieldState extends State<BirthDayField> {
   }
 
   String? birthDayValidator(DateTime? value) {
+    String? _message;
     if (value == null) {
-      String _message = '誕生日を入力してください';
-      setState(() {
-        _errorText = _message;
-      });
-      return _message;
+      _message = '誕生日を入力してください';
     }
+
     setState(() {
-      _errorText = null;
+      _errorText = _message;
     });
-    return null;
+    return _message;
   }
 
   void _selectDate(FormFieldState<DateTime> state) async {
@@ -53,6 +54,7 @@ class BirthDayFieldState extends State<BirthDayField> {
 
     if (birthDay != null) {
       state.didChange(birthDay);
+      ref.watch(selectedBirthDayProvider.notifier).state = birthDay;
       _controller.value = _controller.value.copyWith(
         text: '${birthDay.year}年${birthDay.month}月${birthDay.day}日',
       );
